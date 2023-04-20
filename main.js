@@ -1,8 +1,12 @@
+//Pokemon wrapper
 const pokemonContainer = document.querySelector('.pokemon-container')
+//Botones cambio de generación
 const botonGeneracion = document.querySelectorAll('.boton-generacion')
+//Buscador de pokemons
 const buscador = document.getElementById('buscador')
+//Objeto colo
 const colores = {
-    fire: '#A8A8C0',
+    fire: '#F05030',
     grass: '#78C850',
     poison: '#B058A0',
     normal: '#A8A090',
@@ -21,7 +25,8 @@ const colores = {
     dark: '#7A5848',
     steel: '#A8A8C0'
 }
-//steel
+console.log(typeof(colores))
+
 async function fetchPokemon(id) {
     await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
     .then(res => res.json())
@@ -74,7 +79,6 @@ function createPokemon(pokemon) {
 }
 fetchPokemons(780)
 
-//name -> etiqueta del nombre del pokemon
 
 
 
@@ -87,9 +91,6 @@ document.addEventListener('keyup', e => {
             pokemon.textContent.toLowerCase().includes(e.target.value.toLowerCase())
             ?pokemon.parentElement.classList.remove("filtro")
             :pokemon.parentElement.classList.add("filtro")
-        })
-            
-            
-        
+        })   
     }
 })
