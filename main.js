@@ -4,6 +4,8 @@ const pokemonContainer = document.querySelector('.pokemon-container')
 const botonGeneracion = document.querySelectorAll('.boton-generacion')
 //Buscador de pokemons
 const buscador = document.getElementById('buscador')
+//El spinner no se va a ver a no ser que haya problemas al fetchewar los datos
+const spinner = document.querySelector("#spinner")
 //Objeto colo
 const colores = {
     fire: '#F05030',
@@ -30,16 +32,28 @@ console.log(typeof(colores))
 async function fetchPokemon(id) {
     await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
     .then(res => res.json())
-    .then(data => createPokemon(data))
+    .then(data => {
+        createPokemon(data)
+        spinner.style.display = "none"
+    })
 }
 
 async function fetchPokemons(number) {
+    spinner.style.display = "block"
     for (let i = 1; i <= number; i++) {
         await fetchPokemon(i)
     }
 }
 
 function createPokemon(pokemon) {
+    const flipcard = document.createElement('div')
+    flipcard.classList.add("flip-card")
+
+    const cardContainer = document.createElement('div')
+    cardContainer.classList.add("card-container")
+
+    flipcard.appendChild(cardContainer)
+
     const card = document.createElement('div')
     card.classList.add('pokemon-block');
     
@@ -75,7 +89,13 @@ function createPokemon(pokemon) {
     card.appendChild(number)
     card.appendChild(name)
 
-    pokemonContainer.appendChild(card)
+    const cardBack = document.createElement('div')
+    cardBack.classList.add('pokemon-block-back')
+    cardBack.textContent = pokemon.name //prueba
+
+    cardContainer.appendChild(card)
+    cardContainer.appendChild(cardBack)
+    pokemonContainer.appendChild(flipcard)
 }
 fetchPokemons(780)
 
