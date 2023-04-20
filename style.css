@@ -128,12 +128,7 @@ body {
   display: none;
 }
 
-#spinner {
-  display:none;
-  position:absolute;
-  top:50%;
-  left:50%;
-}
+
 
 .card-container {
   position: relative;

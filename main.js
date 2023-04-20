@@ -91,7 +91,7 @@ function createPokemon(pokemon) {
 
     const cardBack = document.createElement('div')
     cardBack.classList.add('pokemon-block-back')
-    cardBack.textContent = pokemon.name //prueba
+    cardBack.textContent = pokemon.name//prueba
 
     cardContainer.appendChild(card)
     cardContainer.appendChild(cardBack)
@@ -104,13 +104,18 @@ fetchPokemons(780)
 
 document.addEventListener('keyup', e => {
     if (e.target.matches("#buscador")) {
+        let contador = 0
         const nombres_pokemon = document.querySelectorAll('.name')
-        const pokemon_container = document.querySelectorAll("pokemon-block")
+        const pokemon_container = document.querySelectorAll(".flip-card")
+        console.log(pokemon_container.length)
         nombres_pokemon.forEach(pokemon => {
-            console.log(pokemon.textContent.toLowerCase())
-            pokemon.textContent.toLowerCase().includes(e.target.value.toLowerCase())
-            ?pokemon.parentElement.classList.remove("filtro")
-            :pokemon.parentElement.classList.add("filtro")
+            if (pokemon.textContent.toLowerCase().includes(e.target.value.toLowerCase())) {
+                pokemon_container[contador].classList.remove("filtro")
+            }
+            else {
+                pokemon_container[contador].classList.add("filtro")
+            }
+            contador++
         })   
     }
 })
