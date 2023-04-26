@@ -28,50 +28,68 @@ const colores = {
     steel: '#A8A8C0'
 }
 
-//Timeout que permite fetchear todos los datos
-/*setTimeout(() => {
-    spinner.style.display = "none"
-    buscador.style.display = "block"
-},15000)*/
+let img_container
 
+//Función asíncrona de fetcheo de un pokemon por su id
 async function fetchPokemon(id) {
+    //ocultamos el buscador y mostramos el spinner cada vez que fetchea un pokemon
     buscador.style.display = "none"
     spinner.style.display = "block"
+    //fetcheamos la url con la id pasada como parámetro, la respuesta la convertimos a un json, y por cada objeto del json creamos un pokemon
     await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
     .then(res => res.json())
     .then(data => {
         createPokemon(data)
-        console.log(data)
     })
+    //ocultamos el spinner y mostramos el buscador cuando acaba de fetchear un pokemon,
+    //de forma que cuando fetchee el último pokemon el buscador quedará visible.
     buscador.style.display = "block"
     spinner.style.display = "none"
 }
 
+//función asíncrona que fetchea un número de pokemon pasado como parámetro
 async function fetchPokemons(number) {
     for (let i = 1; i <= number; i++) {
         await fetchPokemon(i)
     }
+    img_container = document.querySelectorAll(".img-container")
 }
 
+//función que crea un pokemon por cada objeto json pasado como parámetro
 function createPokemon(pokemon) {
+    //por cada objeto del json creamos un div que será el contenedor de nuestro pokemon (tanto parte de atrás como parte de delante)
     const flipcard = document.createElement('div')
     flipcard.classList.add("flip-card")
 
+    //Es lo mismo que flipcard, la única utilidad que nos da esque el hover lo haremos sobre la flipcard y le afectará a este contenedor
+    //ya que al rotarse hay un punto en el que la tarjeta deja de poder ser tarjeteada, poir lo que necesitamos dos contenedores iguales, uno dentro del otro
     const cardContainer = document.createElement('div')
     cardContainer.classList.add("card-container")
-
     flipcard.appendChild(cardContainer)
+    
 
+    //Esta es la parte delantera de nuestra tarjeta
     const card = document.createElement('div')
     card.classList.add('pokemon-block');
-    
+    card.addEventListener("click", () => {
+        cardContainer.style.transform = "rotateY(180deg)"
+    })
+
+    //Contenedor que contendrá la imagen del pokemon
     const spriteContainer = document.createElement('div')
     spriteContainer.classList.add('img-container')
 
+    //Imagen del pokemon
     const sprite = document.createElement('img')
+    sprite.classList.add('img-pokemon')
     sprite.src = pokemon.sprites.front_default
-
     spriteContainer.appendChild(sprite)
+    sprite.addEventListener("mouseover", () => {
+        sprite.src = pokemon.sprites.front_shiny
+    })
+    sprite.addEventListener("mouseleave", () => {
+        sprite.src = pokemon.sprites.front_default
+    })
 
     const number = document.createElement('p')
     number.textContent = `#${pokemon.id.toString().padStart(3, 0)}`
@@ -80,6 +98,7 @@ function createPokemon(pokemon) {
     name.classList.add('name')
     name.textContent = pokemon.name
 
+    //En la parte frontal irán el contenedor de la imagen (con la imagen), el número, y el nombre del pokemon
     card.appendChild(spriteContainer)
     card.appendChild(number)
     card.appendChild(name)
@@ -87,6 +106,9 @@ function createPokemon(pokemon) {
     const cardBack = document.createElement('div')
     cardBack.classList.add('pokemon-block-back')
     cardBack.appendChild(progressBars(pokemon.stats))
+    cardBack.addEventListener("click", () => {
+        cardContainer.style.transform = ""
+    })
 
     let tipo1, tipo2
     if (pokemon.types.length > 1) {
@@ -107,7 +129,7 @@ function createPokemon(pokemon) {
     cardContainer.appendChild(cardBack)
     pokemonContainer.appendChild(flipcard)
 }
-fetchPokemons(151)
+fetchPokemons(1000)
 
 function progressBars(stats) {
     //100 px de barra
@@ -145,25 +167,25 @@ function progressBars(stats) {
 //progressContainer -> Contenedor de la barra
 //progressBar
 
-document.addEventListener('keyup', e => {
+buscador.addEventListener('keyup', e => {
     const pokemon_container = document.querySelectorAll(".flip-card")
     const nombres_pokemon = document.querySelectorAll('.name')
-    if (e.target.matches("#buscador")) {
-            esconderPokemons(e)
-        }   
-    })
+    esconderPokemons(e)
+})
 
 
 function esconderPokemons(event) {
      const pokemon_container = document.querySelectorAll(".flip-card")
     const nombres_pokemon = document.querySelectorAll('.name')
-    for( let i = 0; i < pokemon_container.length; i++ ) {
+    for( let i = 0 ; i < pokemon_container.length ; i++ ) {
         let nombrePokemon = nombres_pokemon[i]
         let contenedorPokemon = pokemon_container[i]
-        if (nombrePokemon.textContent.toLowerCase().includes(event.target.value.toLowerCase())) {
+        if (nombrePokemon.textContent.toLowerCase().includes(buscador.value.toLowerCase())) {
             contenedorPokemon.classList.remove("filtro")
         } else {
             contenedorPokemon.classList.add("filtro")
         }
     }
 }
+
+

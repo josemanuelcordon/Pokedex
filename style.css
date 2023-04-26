@@ -145,10 +145,10 @@ body {
   transform-style: preserve-3d;
 }
 
-.flip-card:hover .card-container {
+/*.flip-card:hover .card-container {
   transform: rotateY(180deg);
   cursor: pointer;
-}
+} */
 
 .pokemon-block-back {
   background-color: white;
