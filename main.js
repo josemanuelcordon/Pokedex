@@ -129,7 +129,7 @@ function createPokemon(pokemon) {
     cardContainer.appendChild(cardBack)
     pokemonContainer.appendChild(flipcard)
 }
-fetchPokemons(1000)
+fetchPokemons(151)
 
 function progressBars(stats) {
     //100 px de barra
