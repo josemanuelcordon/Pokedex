@@ -27,7 +27,7 @@ const colores = {
   dark: "#7A5848",
   steel: "#A8A8C0",
 };
-const parallelBatches = navigator.hardwareConcurrency - 1;
+// const parallelBatches = navigator.hardwareConcurrency - 1;
 let img_container;
 
 //Función asíncrona de fetcheo de un pokemon por su id
@@ -37,7 +37,7 @@ async function fetchPokemon(id) {
   );
   return dato;
 }
-
+/*
 async function fetchPokemonBatch(i, batchSize) {
   const promiseArray = [];
   for (let j = 1; j <= batchSize; j++) {
@@ -46,18 +46,17 @@ async function fetchPokemonBatch(i, batchSize) {
   const pokemons = await Promise.all(promiseArray);
   pokemons.forEach(createPokemon);
 }
-
+*/
 //función asíncrona que fetchea un número de pokemon pasado como parámetro
 async function fetchPokemons(number) {
   buscador.style.display = "none";
   spinner.style.display = "block";
-  const lastBatchSize = number % parallelBatches;
-  const numBatches = Math.floor(number / parallelBatches);
-
-  for (let i = 0; i < numBatches; i++) {
-    await fetchPokemonBatch(i, parallelBatches);
+  const promisesArray = [];
+  for (let i = 1; i <= number; i++) {
+    promisesArray.push(fetchPokemon(i));
   }
-  await fetchPokemonBatch(numBatches, lastBatchSize);
+  const pokemons = await Promise.all(promisesArray);
+  pokemons.forEach(createPokemon);
 
   buscador.style.display = "block";
   spinner.style.display = "none";
